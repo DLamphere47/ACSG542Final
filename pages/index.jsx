@@ -32,10 +32,10 @@ const defaultProps = {
 
 // eslint-disable-next-line react/prefer-stateless-function
 function Index() {
-  const [username, setUsername] = useState('');
-  const [chosenUsername, setChosenUsername] = useState();
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [uname, setUname] = useState('');
+  const [chosenUname, setChosenUname] = useState();
+  const [mess, setMess] = useState('');
+  const [messs, setMesss] = useState([]);
 
   const socketInitializer = async () => {
     await fetch('/api/socket');
@@ -45,10 +45,7 @@ function Index() {
       // console.log('connected');
     });
     socket.on('messageToDisplay', (msg) => {
-      setMessages((currentMessage) => [
-        ...currentMessage,
-        { author: msg.author, message: msg.message },
-      ]);
+      setMesss((currentMess) => [...currentMess, { author: msg.author, mess: msg.mess }]);
     });
   };
   useEffect(() => {
@@ -59,16 +56,16 @@ function Index() {
   }, []);
 
   const sendMessage = async () => {
-    socket.emit('messageToPropogate', { author: chosenUsername, message });
-    setMessages((currentMsg) => [...currentMsg, { author: chosenUsername, message }]);
+    socket.emit('messageToPropogate', { author: chosenUname, mess });
+    setMesss((currentMsg) => [...currentMsg, { author: chosenUname, mess }]);
     // console.log(message);
-    setMessage('');
+    setMess('');
   };
 
   const handleKeypress = (e) => {
     // it triggers by pressing the enter key
     if (e.keyCode === 13) {
-      if (message) {
+      if (mess) {
         sendMessage();
       }
     }
@@ -77,19 +74,19 @@ function Index() {
   return (
     <div>
       <main>
-        {!chosenUsername ? (
+        {!chosenUname ? (
           <>
             <div style={styleNameInput}>
               <h1>What is your name?</h1>
               <input
                 type="text"
                 placeholder="Identity..."
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={uname}
+                onChange={(e) => setUname(e.target.value)}
               />
               <Button
                 onClick={() => {
-                  setChosenUsername(username);
+                  setChosenUname(uname);
                 }}
               >
                 GO!
@@ -101,10 +98,10 @@ function Index() {
             <div style={styleRow}>
               <div style={styleColumn}>
                 <div style={styleMessageBox}>
-                  {messages.map((msg, i) => {
+                  {messs.map((msg, i) => {
                     return (
                       <div key={i}>
-                        {msg.author} : {msg.message} - {new Date().toLocaleString()}
+                        {msg.author} : {msg.mess} - {new Date().toLocaleString()}
                       </div>
                     );
                   })}
@@ -112,13 +109,13 @@ function Index() {
               </div>
               <div style={styleColumn}>
                 <div style={styleInputs}>
-                  <p>Your username: {username}</p>
+                  <p>Your username: {uname}</p>
                   <input
                     style={styleInputBox}
                     type="textarea"
                     placeholder="New message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    value={mess}
+                    onChange={(e) => setMess(e.target.value)}
                     onKeyUp={handleKeypress}
                   />
                   <Button
