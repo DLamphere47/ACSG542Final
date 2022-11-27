@@ -4,7 +4,7 @@ tmp/
 npm-debug.log
 .DS_Store
 
-
+.github
 .build/*
 .next
 .vscode/
